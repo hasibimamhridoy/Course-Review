@@ -14,6 +14,10 @@ router.get(
   '/',
   CourseController.getCourses
 )
+router.get(
+  '/best',
+  CourseController.getBestCourse
+)
 
 router.get(
   '/:courseId/reviews',

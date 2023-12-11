@@ -42,8 +42,8 @@ const getCourses = async (filters: ICourseFilters, paginationOptions: IPaginatio
 
   if (query?.startDate && query?.endDate) {
     andConditions.push({
-      startDate: { $gte: query?.startDate},
-      endDate: { $lte: query?.endDate},
+      startDate: { $gte: query?.startDate },
+      endDate: { $lte: query?.endDate }
     })
   }
 
@@ -95,23 +95,45 @@ const getCourses = async (filters: ICourseFilters, paginationOptions: IPaginatio
 }
 
 const getCourseWithReview = async (id: string) => {
-  
   const result = await User.findById(id)
 
-  const reviews = await Review.find({courseId : id}).select({_id:false})
+  const reviews = await Review.find({ courseId: id }).select({ _id: false })
 
-
-  
   return {
-    course:result,
+    course: result,
     reviews
   }
 }
+const getBestCourse = async (id: string) => {
 
+  const avarageReview = await Review.aggregate([
+    {
+      $group: {
+        _id: '$courseId',
+        averageRating: { $avg: '$rating' },
+        reviewCount: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { averageRating: -1 }
+    },
+    {
+      $limit: 1
+    }
+  ])
 
+  const result = await User.findOne({ _id: avarageReview[0]._id })
+
+  return {
+    course :  result,
+    averageRating: avarageReview[0].averageRating,
+    reviewCount: avarageReview[0].reviewCount
+  }
+}
 
 export const CourseServices = {
   createCourse,
   getCourseWithReview,
-  getCourses
+  getCourses,
+  getBestCourse
 }
