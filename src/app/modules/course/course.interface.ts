@@ -27,3 +27,24 @@ export type ITag =  {
   
 
 export type AcademicDepartmentModel = Model<ICourse,Record<string,unknown>>
+
+
+export type ICourseFilters = {
+  searchTerm?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  tags?: string;
+  startDate?: string;
+  endDate?: string;
+  language?: string;
+  provider?: string;
+  durationInWeeks?: string;
+  level?: string;
+};
+
+export type IPaginationOptions = {
+  page?:number;
+  limit? :number;
+  sortBy?: string;
+  sortOrder?:'asc'|'desc';
+}

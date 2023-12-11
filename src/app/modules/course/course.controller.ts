@@ -5,6 +5,8 @@ import sendResponse from '../../../shared/sendResponse'
 import httpStatus from 'http-status'
 import { CourseServices } from './course.services'
 import { ICourse } from './course.interface'
+import pick from '../../../shared/pick'
+import { coursefilterableFileds, paginationFields } from './course.constant'
 
 
 const createCourse= catchAsync(async (req: Request, res: Response) => {
@@ -22,14 +24,29 @@ const createCourse= catchAsync(async (req: Request, res: Response) => {
 
 const getCourses = catchAsync(async (req: Request, res: Response) => {
 
-  const result = await CourseServices.getCourses()
+
+   /**
+   *Useing pik por Get paginations options
+   */
+   const paginationOptions = pick(req.query, paginationFields)
+
+   /**
+   * Useing pik por get the filterFields in an object .
+   */
+
+  //  console.log(coursefilterableFileds);
+   const filters = pick(req.query, coursefilterableFileds)
+
+
+  const result = await CourseServices.getCourses(filters,paginationOptions,req?.query)
   const responseData = {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Courses retrieved successfully',
+    meta: result.meta,
     data: result
   }
-  sendResponse<ICourse[]>(res, responseData)
+  sendResponse(res, responseData)
 })
 
 export const CourseController = {

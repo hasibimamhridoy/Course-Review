@@ -5,6 +5,12 @@ type IResponse<T> = {
   success: boolean
   statusCode: number
   message?: string | null
+  meta? : {
+    page: number,
+    limit: number,
+    total: number,
+
+  }
   data: T | null
 }
 
