@@ -15,6 +15,11 @@ router.get(
   CourseController.getCourses
 )
 
+router.get(
+  '/:courseId/reviews',
+  CourseController.getCourseWithReviews
+)
+
 export const CourseRoutes = {
   router
 }

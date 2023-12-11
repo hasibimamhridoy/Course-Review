@@ -4,6 +4,7 @@ import { ICourse, ICourseFilters, IPaginationOptions } from './course.interface'
 import User from './course.model'
 import Course from './course.model'
 import { courseNestedfilterableFileds } from './course.constant'
+import Review from '../review/review.model'
 
 const createCourse = async (payload: ICourse): Promise<ICourse> => {
   const result = await User.create(payload)
@@ -93,7 +94,24 @@ const getCourses = async (filters: ICourseFilters, paginationOptions: IPaginatio
   }
 }
 
+const getCourseWithReview = async (id: string) => {
+  
+  const result = await User.findById(id)
+
+  const reviews = await Review.find({courseId : id}).select({_id:false})
+
+
+  
+  return {
+    course:result,
+    reviews
+  }
+}
+
+
+
 export const CourseServices = {
   createCourse,
+  getCourseWithReview,
   getCourses
 }
